@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import za.ac.bheki97.testsecspring.dto.AuthRequest;
+import za.ac.bheki97.testsecspring.dto.AuthUserInfo;
 import za.ac.bheki97.testsecspring.entity.User;
+import za.ac.bheki97.testsecspring.repository.UserRepository;
 import za.ac.bheki97.testsecspring.service.EventService;
 import za.ac.bheki97.testsecspring.service.JwtService;
 
@@ -19,6 +21,9 @@ public class HomeController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private UserRepository repository;
 
     @Autowired
     private EventService service;
@@ -39,17 +44,25 @@ public class HomeController {
         return "Logged In User";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/new-account")
     public String addNewUser(@RequestBody User userInfo) {
         return service.addUser(userInfo);
     }
 
     @PostMapping("/authenticate")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+    public AuthUserInfo authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+        System.out.println("AUTHENTICATING USER: "+authRequest.getEmail());
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(authRequest.getEmail());
+
+            String jwtToken = jwtService.generateToken(authRequest.getEmail());
+            User user = repository.findByEmail(authRequest.getEmail()).orElseThrow(() ->new UsernameNotFoundException("User Not Found"));
+            System.out.println("Is Authenticated: "+ jwtToken);
+            AuthUserInfo info = new AuthUserInfo(user,jwtToken);
+
+            return info;
         } else {
+
             throw new UsernameNotFoundException("invalid user request !");
         }
 

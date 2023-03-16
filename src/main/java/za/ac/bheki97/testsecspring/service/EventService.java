@@ -18,6 +18,8 @@ public class EventService {
     public String addUser(User userInfo) {
         userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
         repository.save(userInfo);
-        return "user added to system ";
+        return "user added to system";
     }
+
+
 }
