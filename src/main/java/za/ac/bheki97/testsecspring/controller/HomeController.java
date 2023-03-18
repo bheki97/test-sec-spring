@@ -49,6 +49,8 @@ public class HomeController {
         return service.addUser(userInfo);
     }
 
+
+
     @PostMapping("/authenticate")
     public AuthUserInfo authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         System.out.println("AUTHENTICATING USER: "+authRequest.getEmail());
@@ -57,7 +59,8 @@ public class HomeController {
 
             String jwtToken = jwtService.generateToken(authRequest.getEmail());
             User user = repository.findByEmail(authRequest.getEmail()).orElseThrow(() ->new UsernameNotFoundException("User Not Found"));
-            System.out.println("Is Authenticated: "+ jwtToken);
+
+            System.out.println("Is Authenticated: "+user.getFirstname()+" "+user.getEmail());
             AuthUserInfo info = new AuthUserInfo(user,jwtToken);
 
             return info;
