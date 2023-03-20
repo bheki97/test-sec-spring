@@ -9,8 +9,8 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @Column(name = "identity_num")
+    private String idNumber;
     private String firstname;
     private String lastname;
     private String email;
@@ -22,12 +22,12 @@ public class User implements Serializable {
 
     }
 
-    public Integer getId() {
-        return id;
+    public String getIdNumber() {
+        return idNumber;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdNumber(String id) {
+        this.idNumber = id;
     }
 
     public String getFirstname() {
@@ -37,6 +37,8 @@ public class User implements Serializable {
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
+
+
 
     public String getLastname() {
         return lastname;
@@ -69,6 +71,7 @@ public class User implements Serializable {
     public void setGender(Character gender) {
         this.gender = gender;
     }
+
 
     public Long getMobileNumber() {
         return mobileNumber;

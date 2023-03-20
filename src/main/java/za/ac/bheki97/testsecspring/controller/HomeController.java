@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import za.ac.bheki97.testsecspring.dto.AuthRequest;
 import za.ac.bheki97.testsecspring.dto.AuthUserInfo;
 import za.ac.bheki97.testsecspring.entity.User;
+import za.ac.bheki97.testsecspring.exception.UserExistsException;
 import za.ac.bheki97.testsecspring.repository.UserRepository;
 import za.ac.bheki97.testsecspring.service.EventService;
 import za.ac.bheki97.testsecspring.service.JwtService;
@@ -45,7 +46,7 @@ public class HomeController {
     }
 
     @PostMapping("/new-account")
-    public String addNewUser(@RequestBody User userInfo) {
+    public String addNewUser(@RequestBody User userInfo) throws UserExistsException {
         return service.addUser(userInfo);
     }
 
