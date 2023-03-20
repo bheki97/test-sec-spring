@@ -18,17 +18,18 @@ public class EventService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public String addUser(User userInfo) throws UserExistsException {
-        Optional<User> validateUser =  repository.findByEmail(userInfo.getEmail());
-
-        if(validateUser==null){
-            userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-            repository.save(userInfo);
-        }else{
-            throw new UserExistsException("The User with "+ userInfo.getEmail()+" already exists");
+    public User addUser(User userInfo) throws UserExistsException {
+        if(repository.existsById(userInfo.getIdNumber())){
+            throw new UserExistsException("User with Id: "+userInfo.getIdNumber()+" Already Exists");
         }
 
-        return "user added to system";
+        if (repository.existsByEmail(userInfo.getEmail())){
+            throw new UserExistsException("User with email: "+userInfo.getEmail()+" Already Exists");
+        }
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+
+        return repository.save(userInfo);
+
     }
 
 

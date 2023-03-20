@@ -22,6 +22,10 @@ public class User implements Serializable {
 
     }
 
+    public User(User user) {
+
+    }
+
     public String getIdNumber() {
         return idNumber;
     }
