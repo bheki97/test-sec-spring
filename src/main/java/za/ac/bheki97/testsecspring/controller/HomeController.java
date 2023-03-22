@@ -30,33 +30,23 @@ public class HomeController {
     private AuthenticationManager authenticationManager;
 
 
-    @GetMapping("/home")
-    public String getHome(){
-
-        return "Hello World!!!!";
-    }
-
-    @GetMapping("/admin")
-    public String adminHome(){
-
-        return "Logged In User";
-    }
-
     @PostMapping("/account")
     public User addNewUser(@RequestBody User userInfo) throws UserExistsException {
         return service.addUser(userInfo);
     }
 
-    @PutMapping("/account/{id}")
-    public User updateAcc(@PathVariable("id") String id, User user){
+    @PutMapping("/account/update")
+    public User updateAcc(@RequestBody User user){
 
-
-        return null;
+        return repository.save(user);
     }
 
+    @DeleteMapping("/account/{id}")
+    public String deleteUser(@PathVariable("id") String id){
+        repository.deleteById(id);
 
-
-
+        return "User Deleted Successfully";
+    }
 
     @PostMapping("/authenticate")
     public AuthUserInfo authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
