@@ -16,7 +16,7 @@ public class User implements Serializable {
     private String email;
     private String password;
     private Character gender;
-    private Long mobileNumber;
+    private String mobileNumber;
 
     public User(){
 
@@ -77,11 +77,11 @@ public class User implements Serializable {
     }
 
 
-    public Long getMobileNumber() {
+    public String getMobileNumber() {
         return mobileNumber;
     }
 
-    public void setMobileNumber(Long mobileNumber) {
+    public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 }

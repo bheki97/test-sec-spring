@@ -42,10 +42,19 @@ public class HomeController {
         return "Logged In User";
     }
 
-    @PostMapping("/new-account")
+    @PostMapping("/account")
     public User addNewUser(@RequestBody User userInfo) throws UserExistsException {
         return service.addUser(userInfo);
     }
+
+    @PutMapping("/account/{id}")
+    public User updateAcc(@PathVariable("id") String id, User user){
+
+
+        return null;
+    }
+
+
 
 
 
