@@ -36,12 +36,13 @@ public class HomeController {
     }
 
     @PutMapping("/account/update")
-    public User updateAcc(@RequestBody User user){
-
-        return repository.save(user);
+    public AuthUserInfo updateAcc(@RequestBody User user){
+        String jwt  = jwtService.generateToken(user.getEmail());
+        System.out.println(jwt);
+        return new AuthUserInfo(repository.save(user),jwt);
     }
 
-    @DeleteMapping("/account/{id}")
+    @DeleteMapping("account/{id}")
     public String deleteUser(@PathVariable("id") String id){
         repository.deleteById(id);
 
@@ -51,7 +52,9 @@ public class HomeController {
     @PostMapping("/authenticate")
     public AuthUserInfo authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         System.out.println("AUTHENTICATING USER: "+authRequest.getEmail());
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+
         if (authentication.isAuthenticated()) {
 
             String jwtToken = jwtService.generateToken(authRequest.getEmail());
