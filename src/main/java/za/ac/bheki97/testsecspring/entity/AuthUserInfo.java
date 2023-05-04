@@ -1,5 +1,7 @@
 package za.ac.bheki97.testsecspring.entity;
 
+import za.ac.bheki97.testsecspring.entity.user.User;
+
 public class AuthUserInfo {
 
     private User user;

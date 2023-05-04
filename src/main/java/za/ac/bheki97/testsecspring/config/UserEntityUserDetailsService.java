@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import za.ac.bheki97.testsecspring.entity.User;
+import za.ac.bheki97.testsecspring.entity.user.User;
 import za.ac.bheki97.testsecspring.repository.UserRepository;
 
 import java.util.Optional;

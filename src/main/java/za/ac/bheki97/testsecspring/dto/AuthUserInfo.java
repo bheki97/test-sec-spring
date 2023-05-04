@@ -1,6 +1,6 @@
 package za.ac.bheki97.testsecspring.dto;
 
-import za.ac.bheki97.testsecspring.entity.User;
+import za.ac.bheki97.testsecspring.entity.user.User;
 
 public class AuthUserInfo {
 

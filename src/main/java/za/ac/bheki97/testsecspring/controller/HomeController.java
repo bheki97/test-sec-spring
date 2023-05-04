@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import za.ac.bheki97.testsecspring.dto.AuthRequest;
 import za.ac.bheki97.testsecspring.dto.AuthUserInfo;
-import za.ac.bheki97.testsecspring.entity.User;
+import za.ac.bheki97.testsecspring.entity.user.User;
 import za.ac.bheki97.testsecspring.exception.UserExistsException;
 import za.ac.bheki97.testsecspring.repository.UserRepository;
 import za.ac.bheki97.testsecspring.service.EventService;

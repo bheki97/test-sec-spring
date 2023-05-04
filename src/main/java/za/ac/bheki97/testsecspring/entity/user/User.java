@@ -1,4 +1,4 @@
-package za.ac.bheki97.testsecspring.entity;
+package za.ac.bheki97.testsecspring.entity.user;
 
 import jakarta.persistence.*;
 

@@ -3,11 +3,9 @@ package za.ac.bheki97.testsecspring.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import za.ac.bheki97.testsecspring.entity.User;
+import za.ac.bheki97.testsecspring.entity.user.User;
 import za.ac.bheki97.testsecspring.exception.UserExistsException;
 import za.ac.bheki97.testsecspring.repository.UserRepository;
-
-import java.util.Optional;
 
 @Service
 public class EventService {
