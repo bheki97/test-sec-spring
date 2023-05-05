@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Guest implements Serializable {
 
     @Id
@@ -18,6 +19,9 @@ public class Guest implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+   public Guest(){
+
+    }
 
     @Temporal(value = TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "YYYY/mmm/dd HH:mm:ss")

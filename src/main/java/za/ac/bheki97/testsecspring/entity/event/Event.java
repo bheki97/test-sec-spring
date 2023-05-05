@@ -17,9 +17,7 @@ public class Event implements Serializable {
     @Column(name = "event_key")
     private String eventKey;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private MasterOfCeremony mc;
+
     @OneToMany(targetEntity = Guest.class,cascade = CascadeType.ALL)
     @JoinColumn(name = "identity_num")
     private List<Speaker> speakers;
@@ -52,14 +50,6 @@ public class Event implements Serializable {
         this.eventKey = eventKey;
     }
 
-
-    public MasterOfCeremony getMc() {
-        return mc;
-    }
-
-    public void setMc(MasterOfCeremony mc) {
-        this.mc = mc;
-    }
 
     public List<Speaker> getSpeakers() {
         return speakers;
@@ -97,7 +87,6 @@ public class Event implements Serializable {
     public String toString() {
         return "Event{" +
                 "eventKey='" + eventKey + '\'' +
-                ", mc=" + mc.toString() +
                 ", speakers=" + speakers.toString()+
                 ", guests=" + guests.toString() +
                 ", occasion='" + occasion + '\'' +

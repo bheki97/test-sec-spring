@@ -15,6 +15,9 @@ public class Host implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Host(){
+
+    }
 
     public int getHostId() {
         return hostId;
