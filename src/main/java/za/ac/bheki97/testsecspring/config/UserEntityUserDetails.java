@@ -3,7 +3,7 @@ package za.ac.bheki97.testsecspring.config;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import za.ac.bheki97.testsecspring.entity.user.User;
+import za.ac.bheki97.testsecspring.entity.user.Account;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,9 +16,9 @@ public class UserEntityUserDetails implements UserDetails {
     Collection<GrantedAuthority> grantedAuthorities;
 
 
-    public UserEntityUserDetails(User user){
-        email = user.getEmail();
-        password = user.getPassword();
+    public UserEntityUserDetails(Account account){
+        email = account.getEmail();
+        password = account.getPassword();
         grantedAuthorities = Arrays.stream("ROLE_user".split("#"))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

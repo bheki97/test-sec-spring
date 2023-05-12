@@ -3,6 +3,7 @@ package za.ac.bheki97.testsecspring.entity.event;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import za.ac.bheki97.testsecspring.entity.user.guest.Guest;
+import za.ac.bheki97.testsecspring.entity.user.host.Host;
 import za.ac.bheki97.testsecspring.entity.user.programdir.MasterOfCeremony;
 import za.ac.bheki97.testsecspring.entity.user.speaker.Speaker;
 
@@ -17,12 +18,11 @@ public class Event implements Serializable {
     @Column(name = "event_key")
     private String eventKey;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "host_id")
+    private Host host;
 
-    @OneToMany(targetEntity = Guest.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "identity_num")
-    private List<Speaker> speakers;
-    @OneToMany(targetEntity = Guest.class,cascade = CascadeType.ALL)
-    @JoinColumn(name = "guest_id")
+    @OneToMany(mappedBy = "event")
     private List<Guest> guests;
     private String occasion;
     private String description;
@@ -51,14 +51,6 @@ public class Event implements Serializable {
     }
 
 
-    public List<Speaker> getSpeakers() {
-        return speakers;
-    }
-
-    public void setSpeakers(List<Speaker> speakers) {
-        this.speakers = speakers;
-    }
-
     public List<Guest> getGuests() {
         return guests;
     }
@@ -83,11 +75,20 @@ public class Event implements Serializable {
         this.description = description;
     }
 
+    public Host getHost() {
+        return host;
+    }
+
+    public void setHost(Host host) {
+        this.host = host;
+    }
+
     @Override
     public String toString() {
+       // guests.stream().filter(guest -> guest==null).filter(guest ->);
+
         return "Event{" +
                 "eventKey='" + eventKey + '\'' +
-                ", speakers=" + speakers.toString()+
                 ", guests=" + guests.toString() +
                 ", occasion='" + occasion + '\'' +
                 ", description='" + description + '\'' +

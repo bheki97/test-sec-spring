@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="user_tbl")
-public class User implements Serializable {
+@Table(name="account_tbl")
+public class Account implements Serializable {
 
     @Id
-    @Column(name = "identity_num")
+    @Column(name = "account_id")
     private String idNumber;
     private String firstname;
     private String lastname;
@@ -18,11 +18,13 @@ public class User implements Serializable {
     private Character gender;
     private String mobileNumber;
 
-    public User(){
+    private String language;
+
+    public Account(){
 
     }
 
-    public User(User user) {
+    public Account(Account account) {
 
     }
 
@@ -81,7 +83,30 @@ public class User implements Serializable {
         return mobileNumber;
     }
 
+
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "idNumber='" + idNumber + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", gender=" + gender +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", language='" + language + '\'' +
+                '}';
     }
 }

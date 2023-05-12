@@ -1,7 +1,6 @@
 package za.ac.bheki97.testsecspring.entity.user.speaker;
 
 import jakarta.persistence.*;
-import za.ac.bheki97.testsecspring.entity.user.User;
 import za.ac.bheki97.testsecspring.entity.user.guest.Guest;
 
 import java.io.Serializable;
@@ -16,6 +15,9 @@ public class Speaker  extends Guest implements Serializable {
     public Speaker() {
     }
 
+    public static Speaker buildSpeaker(Guest guest){
+        return (Speaker) guest;
+    }
 
 
 

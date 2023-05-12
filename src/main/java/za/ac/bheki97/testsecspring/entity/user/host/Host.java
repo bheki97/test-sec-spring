@@ -1,7 +1,7 @@
 package za.ac.bheki97.testsecspring.entity.user.host;
 
 import jakarta.persistence.*;
-import za.ac.bheki97.testsecspring.entity.user.User;
+import za.ac.bheki97.testsecspring.entity.user.Account;
 
 import java.io.Serializable;
 
@@ -11,9 +11,11 @@ public class Host implements Serializable {
     @Id
     @Column(name = "host_id")
     private int hostId;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    private String brand;
 
     public Host(){
 
@@ -27,11 +29,19 @@ public class Host implements Serializable {
         this.hostId = hostId;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

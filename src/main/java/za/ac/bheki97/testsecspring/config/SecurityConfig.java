@@ -3,6 +3,7 @@ package za.ac.bheki97.testsecspring.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -47,7 +48,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/account","/authenticate","/speech/**").permitAll()
+                .authorizeHttpRequests().requestMatchers("/account","/authenticate","/speech/**","/event/**","/event/remove/{id}"
+                        ,"/event/leave/{eventKey}/{guestId}").permitAll()
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/account/**").authenticated()

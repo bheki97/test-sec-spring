@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import za.ac.bheki97.testsecspring.entity.user.User;
+import za.ac.bheki97.testsecspring.entity.user.Account;
 import za.ac.bheki97.testsecspring.repository.UserRepository;
 
 import java.util.Optional;
@@ -19,7 +19,7 @@ public class UserEntityUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = repository.findByEmail(username);
+        Optional<Account> user = repository.findByEmail(username);
         return user.map(UserEntityUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
     }

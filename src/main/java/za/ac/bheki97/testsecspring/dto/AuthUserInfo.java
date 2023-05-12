@@ -1,27 +1,27 @@
 package za.ac.bheki97.testsecspring.dto;
 
-import za.ac.bheki97.testsecspring.entity.user.User;
+import za.ac.bheki97.testsecspring.entity.user.Account;
 
 public class AuthUserInfo {
 
-    private User user;
+    private Account account;
     private String jwtToken;
 
 
-    public AuthUserInfo(User user, String jwtToken) {
-        this.user = user;
+    public AuthUserInfo(Account account, String jwtToken) {
+        this.account = account;
         this.jwtToken = jwtToken;
     }
 
     public AuthUserInfo() {
     }
 
-    public User getUser() {
-        return user;
+    public Account getUser() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Account account) {
+        this.account = account;
     }
 
     public String getJwtToken() {

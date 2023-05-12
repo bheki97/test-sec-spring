@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import za.ac.bheki97.testsecspring.dto.AuthRequest;
 import za.ac.bheki97.testsecspring.dto.AuthUserInfo;
-import za.ac.bheki97.testsecspring.entity.user.User;
+import za.ac.bheki97.testsecspring.entity.user.Account;
 import za.ac.bheki97.testsecspring.exception.UserExistsException;
 import za.ac.bheki97.testsecspring.repository.UserRepository;
-import za.ac.bheki97.testsecspring.service.EventService;
+import za.ac.bheki97.testsecspring.service.AccountService;
 import za.ac.bheki97.testsecspring.service.JwtService;
 
 @RestController
@@ -24,22 +24,22 @@ public class HomeController {
     private UserRepository repository;
 
     @Autowired
-    private EventService service;
+    private AccountService service;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
 
     @PostMapping("/account")
-    public User addNewUser(@RequestBody User userInfo) throws UserExistsException {
-        return service.addUser(userInfo);
+    public Account addNewUser(@RequestBody Account accountInfo) throws UserExistsException {
+        return service.addUser(accountInfo);
     }
 
     @PutMapping("/account/update")
-    public AuthUserInfo updateAcc(@RequestBody User user){
-        String jwt  = jwtService.generateToken(user.getEmail());
+    public AuthUserInfo updateAcc(@RequestBody Account account){
+        String jwt  = jwtService.generateToken(account.getEmail());
         System.out.println(jwt);
-        return new AuthUserInfo(repository.save(user),jwt);
+        return new AuthUserInfo(repository.save(account),jwt);
     }
 
     @DeleteMapping("account/{id}")
@@ -58,10 +58,10 @@ public class HomeController {
         if (authentication.isAuthenticated()) {
 
             String jwtToken = jwtService.generateToken(authRequest.getEmail());
-            User user = repository.findByEmail(authRequest.getEmail()).orElseThrow(() ->new UsernameNotFoundException("User Not Found"));
+            Account account = repository.findByEmail(authRequest.getEmail()).orElseThrow(() ->new UsernameNotFoundException("User Not Found"));
 
-            System.out.println("Is Authenticated: "+user.getFirstname()+" "+user.getEmail());
-            AuthUserInfo info = new AuthUserInfo(user,jwtToken);
+            System.out.println("Is Authenticated: "+ account.getFirstname()+" "+ account.getEmail());
+            AuthUserInfo info = new AuthUserInfo(account,jwtToken);
 
             return info;
         } else {
