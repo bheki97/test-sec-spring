@@ -1,6 +1,8 @@
 package za.ac.bheki97.testsecspring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import za.ac.bheki97.testsecspring.dto.AuthRequest;
 import za.ac.bheki97.testsecspring.dto.AuthUserInfo;
+import za.ac.bheki97.testsecspring.dto.MessageDto;
 import za.ac.bheki97.testsecspring.entity.user.Account;
 import za.ac.bheki97.testsecspring.exception.UserExistsException;
 import za.ac.bheki97.testsecspring.repository.UserRepository;
@@ -42,11 +45,12 @@ public class HomeController {
         return new AuthUserInfo(repository.save(account),jwt);
     }
 
-    @DeleteMapping("account/{id}")
-    public String deleteUser(@PathVariable("id") String id){
+    @DeleteMapping("/account/{id}")
+    public MessageDto deleteUser(@PathVariable("id") String id){
+
         repository.deleteById(id);
 
-        return "User Deleted Successfully";
+        return new MessageDto("User deleted successfully");
     }
 
     @PostMapping("/authenticate")

@@ -1,58 +1,25 @@
-package za.ac.bheki97.testsecspring.entity.event;
+package za.ac.bheki97.testsecspring.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import za.ac.bheki97.testsecspring.dto.CreateEventDto;
 import za.ac.bheki97.testsecspring.entity.user.guest.Guest;
 import za.ac.bheki97.testsecspring.entity.user.host.Host;
-import za.ac.bheki97.testsecspring.entity.user.programdir.MasterOfCeremony;
-import za.ac.bheki97.testsecspring.entity.user.speaker.Speaker;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class Event implements Serializable {
+public class CreateEventDto {
 
-    @Id
-    @Column(name = "event_key")
     private String eventKey;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "host_id")
     private Host host;
-
-    @OneToMany(mappedBy = "event")
     private List<Guest> guests;
     private String occasion;
     private String description;
+    private String date;
 
-    @Column(name = "event_date_time")
-    @DateTimeFormat(pattern = "YYYY/mmm/dd HH:mm:ss")
-    private LocalDateTime date;
-
-    public Event() {
-    }
-
-    public Event(CreateEventDto dto){
-        this.date = dto.getLocalDateTime();
-        this.eventKey = dto.getEventKey();
-        this.host = dto.getHost();
-        this.guests = new ArrayList<>();
-        this.occasion = dto.getOccasion();
-        this.description = dto.getDescription();
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public CreateEventDto() {
     }
 
     public String getEventKey() {
@@ -63,6 +30,13 @@ public class Event implements Serializable {
         this.eventKey = eventKey;
     }
 
+    public Host getHost() {
+        return host;
+    }
+
+    public void setHost(Host host) {
+        this.host = host;
+    }
 
     public List<Guest> getGuests() {
         return guests;
@@ -88,25 +62,29 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    public Host getHost() {
-        return host;
+    public String getDate() {
+        return date;
     }
 
-    public void setHost(Host host) {
-        this.host = host;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override
     public String toString() {
-       // guests.stream().filter(guest -> guest==null).filter(guest ->);
-
-        return "Event{" +
+        return "CreateEventDto{" +
                 "eventKey='" + eventKey + '\'' +
-                ", guests=" + guests.toString() +
+                ", host=" + host +
+                ", guests=" + guests +
                 ", occasion='" + occasion + '\'' +
                 ", description='" + description + '\'' +
+                ", date='" + date + '\'' +
                 '}';
     }
 
-
+    public LocalDateTime getLocalDateTime(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
+        return localDateTime;
+    }
 }

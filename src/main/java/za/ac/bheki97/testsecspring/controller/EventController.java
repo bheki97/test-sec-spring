@@ -3,6 +3,7 @@ package za.ac.bheki97.testsecspring.controller;
 import org.checkerframework.checker.units.qual.s;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import za.ac.bheki97.testsecspring.dto.CreateEventDto;
 import za.ac.bheki97.testsecspring.dto.JoinEventDto;
 import za.ac.bheki97.testsecspring.entity.event.Event;
 import za.ac.bheki97.testsecspring.exception.EventException;
@@ -17,11 +18,13 @@ public class EventController {
     @Autowired
     private EventService service;
 
-    @PostMapping("/new")
-    public boolean createEvent(@RequestBody Event event) throws EventException {
-        event.setGuests(new ArrayList<>());
+    @PostMapping("")
+    public boolean createEvent(@RequestBody CreateEventDto event) throws EventException {
+//        event.setGuests(new ArrayList<>());
 
-        return service.createEvent(event);
+        System.out.println(event);
+        System.out.println(event.getLocalDateTime().toString());
+        return service.createEvent(new Event(event));
     }
 
     @PostMapping("/join")
@@ -30,13 +33,13 @@ public class EventController {
         return service.joinEvent(dto);
     }
 
-    @PutMapping("/update")
+    @PutMapping("")
     public boolean updateEvent(@RequestBody Event event){
 
         return service.updateEvent(event);
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     public boolean removeEvent(@PathVariable String id){
         return service.cancelEvent(id);
 

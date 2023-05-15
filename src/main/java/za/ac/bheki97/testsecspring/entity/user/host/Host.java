@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class Host implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "host_id")
     private int hostId;
     @OneToOne(fetch = FetchType.EAGER)
