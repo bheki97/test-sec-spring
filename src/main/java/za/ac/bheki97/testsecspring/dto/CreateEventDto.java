@@ -3,6 +3,7 @@ package za.ac.bheki97.testsecspring.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import za.ac.bheki97.testsecspring.entity.event.Event;
 import za.ac.bheki97.testsecspring.entity.user.guest.Guest;
 import za.ac.bheki97.testsecspring.entity.user.host.Host;
 
@@ -20,6 +21,14 @@ public class CreateEventDto {
     private String date;
 
     public CreateEventDto() {
+    }
+
+    public CreateEventDto(Event event){
+        this.occasion = event.getOccasion();
+        this.description = event.getDescription();
+        this.host = event.getHost();
+        this.date = event.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        this.guests = event.getGuests();
     }
 
     public String getEventKey() {

@@ -50,6 +50,11 @@ public class EventController {
         return service.leaveEvent(eventKey,guestId);
     }
 
+    @GetMapping("/host/{id}")
+    public CreateEventDto[] getAllHostEvents(@PathVariable String id) throws EventException {
+        return service.getAllEventOfHost(id);
+    }
+
 
 
 }

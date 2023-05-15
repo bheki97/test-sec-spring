@@ -1,7 +1,9 @@
 package za.ac.bheki97.testsecspring.service;
 
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import za.ac.bheki97.testsecspring.dto.CreateEventDto;
 import za.ac.bheki97.testsecspring.dto.GuestEventDao;
 import za.ac.bheki97.testsecspring.dto.JoinEventDto;
 import za.ac.bheki97.testsecspring.dto.MakeSpeakerDto;
@@ -177,16 +179,17 @@ public class EventService {
     }
 
 
-    public Event[] getAllEventOfHost(String hostAccId) throws EventException {
+    public CreateEventDto[] getAllEventOfHost(String hostAccId) throws EventException {
 
         if(hostAccId==null )return null;
 
         if(!hostRepo.existsByAccount_IdNumber(hostAccId))
             throw new EventException("You are not a Host");
 
-        List<Event> events = eventRepo.findAllByHost_Account_IdNumber(hostAccId);
+        List<CreateEventDto> events = eventRepo.findAllByHost_Account_IdNumber(hostAccId)
+                .stream().map( ev -> new CreateEventDto(ev)).toList();
 
-        Event[] eventsArr = new Event[events.size()];
+        CreateEventDto[] eventsArr = new CreateEventDto[events.size()];
 
         return events.toArray(eventsArr);
     }
@@ -206,13 +209,13 @@ public class EventService {
                                                 .filter(guest1 -> guest1 instanceof Speaker)
                                                 .map(Speaker::buildSpeaker).toList();
 
-                GuestEventDao dao = new GuestEventDao();
-                dao.setEventKey(event.getEventKey());
-                dao.setHost(event.getHost());
-                dao.setDate(event.getDate());
-                dao.setSpeakers(speakers);
-                dao.setOccasion(event.getOccasion());
-                dao.setDescription(event.getDescription());
+                        GuestEventDao dao = new GuestEventDao();
+                        dao.setEventKey(event.getEventKey());
+                        dao.setHost(event.getHost());
+                        dao.setDate(event.getDate());
+                        dao.setSpeakers(speakers);
+                        dao.setOccasion(event.getOccasion());
+                        dao.setDescription(event.getDescription());
 
 
                     return dao;

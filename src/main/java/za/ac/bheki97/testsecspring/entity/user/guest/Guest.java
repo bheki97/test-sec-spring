@@ -24,7 +24,9 @@ public class Guest implements Serializable {
     @ManyToOne
     @JoinColumn(name = "event_key")
     private Event event;
-
+    @CreationTimestamp
+    @DateTimeFormat(pattern = "YYYY/mm/dd HH:mm:ss")
+    private LocalDateTime joindate;
 
    public Guest(){
 
@@ -38,9 +40,7 @@ public class Guest implements Serializable {
         this.event = event;
     }
 
-    @CreationTimestamp
-    @DateTimeFormat(pattern = "YYYY/mm/dd HH:mm:ss")
-    private LocalDateTime joindate;
+
 
     public int getGuestId() {
         return guestId;
