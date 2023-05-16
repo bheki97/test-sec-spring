@@ -50,9 +50,11 @@ public class EventController {
         return service.leaveEvent(eventKey,guestId);
     }
 
-    @GetMapping("/host/{id}")
-    public CreateEventDto[] getAllHostEvents(@PathVariable String id) throws EventException {
-        return service.getAllEventOfHost(id);
+    @PostMapping("/host")
+    public CreateEventDto[] getAllHostEvents(@RequestBody String id) throws EventException {
+
+        System.out.println("ID: "+id.replace("\"",""));
+        return service.getAllEventOfHost(id.replace("\"",""));
     }
 
 

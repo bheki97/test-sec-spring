@@ -25,6 +25,7 @@ public class CreateEventDto {
 
     public CreateEventDto(Event event){
         this.occasion = event.getOccasion();
+        this.eventKey = event.getEventKey();
         this.description = event.getDescription();
         this.host = event.getHost();
         this.date = event.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
