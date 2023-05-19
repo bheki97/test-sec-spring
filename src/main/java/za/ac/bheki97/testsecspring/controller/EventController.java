@@ -2,6 +2,7 @@ package za.ac.bheki97.testsecspring.controller;
 
 import org.checkerframework.checker.units.qual.s;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import za.ac.bheki97.testsecspring.dto.CreateEventDto;
 import za.ac.bheki97.testsecspring.dto.JoinEventDto;
@@ -10,6 +11,7 @@ import za.ac.bheki97.testsecspring.exception.EventException;
 import za.ac.bheki97.testsecspring.service.EventService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/event")
@@ -17,6 +19,9 @@ public class EventController {
 
     @Autowired
     private EventService service;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @PostMapping("")
     public boolean createEvent(@RequestBody CreateEventDto event) throws EventException {
@@ -54,8 +59,14 @@ public class EventController {
     public CreateEventDto[] getAllHostEvents(@RequestBody String id) throws EventException {
 
         System.out.println("ID: "+id.replace("\"",""));
-        return service.getAllEventOfHost(id.replace("\"",""));
+        CreateEventDto[] eventDto = service.getAllEventOfHost(id.replace("\"",""));
+        Arrays.stream(eventDto).forEach(System.out::println);
+        return eventDto;
     }
+
+
+
+
 
 
 

@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import za.ac.bheki97.testsecspring.filter.JwtAuthFilter;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -48,7 +49,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .authorizeHttpRequests().requestMatchers("/account","/account/{id}","/authenticate","/speech/**","/event/**","/event/remove/{id}"
+                .authorizeHttpRequests().requestMatchers("/account","/account/{id}","/authenticate","/speech/**","/event/**","/event/{id}"
                         ,"/event/leave/{eventKey}/{guestId}","/event/host/{id}").permitAll()
                 .and()
                 .authorizeHttpRequests()

@@ -2,6 +2,7 @@ package za.ac.bheki97.testsecspring.service;
 
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import za.ac.bheki97.testsecspring.dto.CreateEventDto;
 import za.ac.bheki97.testsecspring.dto.GuestEventDao;
@@ -14,11 +15,14 @@ import za.ac.bheki97.testsecspring.exception.EventException;
 import za.ac.bheki97.testsecspring.repository.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EventService {
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     private EventRepo eventRepo;
@@ -51,11 +55,14 @@ public class EventService {
         }
 
 
+
         //check if there is an event with same host AccountId and Same Occasion
         if(eventRepo.existsByHost_Account_IdNumberAndOccasion(
-                event.getHost().getAccount().getIdNumber(),event.getOccasion())){
+                event.getHost().getAccount().getIdNumber(),event.getOccasion().trim())){
             throw new EventException("Host already has "+event.getOccasion()+" occasion");
         }
+
+
 
         //event with the same Key
         if (eventRepo.existsById(event.getEventKey())){
@@ -68,7 +75,6 @@ public class EventService {
         )){
             throw new EventException("Already Hosting an Event on this Date");
         }
-
 
 
         eventRepo.save(event);
@@ -84,8 +90,12 @@ public class EventService {
         }
 
         if(!eventRepo.existsById(dto.getEventKey())){
+            System.out.println("QR code: "+dto.getEventKey());
             throw new EventException("This is not a Valid QR code");
         }
+
+
+
 
         //checking if the Guest has Joined the Event
         if(eventRepo.findById(dto.getEventKey()).orElseThrow()
@@ -94,6 +104,10 @@ public class EventService {
                         .getIdNumber()
                         .equals(dto.getAccId())))
             throw new EventException("Guest Already part of the Event");
+
+        if(eventRepo.existsByHost_Account_IdNumberAndEventKey(dto.getAccId(), dto.getEventKey())){
+            throw new EventException("You Can't join your own Event");
+        }
 
         //create new guest object using an account
         Guest guest = new Guest();
@@ -178,6 +192,12 @@ public class EventService {
         return true;
     }
 
+    public Event[] getEvents(){
+        List<Event> events = eventRepo.findAll();
+        Event[] arr = new Event[events.size()];
+        return events.toArray(arr);
+    }
+
 
     public CreateEventDto[] getAllEventOfHost(String hostAccId) throws EventException {
 
@@ -186,12 +206,15 @@ public class EventService {
         if(!hostRepo.existsByAccount_IdNumber(hostAccId))
             throw new EventException("You are not a Host");
 
-        List<CreateEventDto> events = eventRepo.findAllByHost_Account_IdNumber(hostAccId)
-                .stream().map( ev -> new CreateEventDto(ev)).toList();
+        List<Event> events = eventRepo.findAllByHost_Account_IdNumber(hostAccId)
+                .stream().toList();
 
+        List<CreateEventDto> eventsDto = new ArrayList<>();
+
+        System.out.println("Service Layer: "+events);
         CreateEventDto[] eventsArr = new CreateEventDto[events.size()];
-
-        return events.toArray(eventsArr);
+        //System.out.println("Service Layer: Array");
+        return eventsDto.toArray(eventsArr);
     }
 
     public GuestEventDao[] getAllJoinedEvents(String guestAccId) throws EventException {
