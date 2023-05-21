@@ -15,8 +15,17 @@ public class Speaker  extends Guest implements Serializable {
     public Speaker() {
     }
 
+
+
     public static Speaker buildSpeaker(Guest guest){
-        return (Speaker) guest;
+        Speaker sp = new Speaker();
+        sp.setEvent(guest.getEvent());
+        sp.setAccount(guest.getAccount());
+        sp.setGuestId(guest.getGuestId());
+        sp.setJoindate(guest.getJoindate());
+
+
+        return sp;
     }
 
 

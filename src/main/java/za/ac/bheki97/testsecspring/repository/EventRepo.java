@@ -18,4 +18,6 @@ public interface EventRepo extends JpaRepository<Event,String> {
     boolean existsByHost_Account_IdNumberAndEventKey(String hostId,String eventKey);
 
     List<Event> findAllByHost_Account_IdNumber(String hostId);
+
+
 }

@@ -12,5 +12,7 @@ public interface GuestRepo extends JpaRepository<Guest,Integer> {
 
     List<Guest> findAllByAccount_IdNumber(String accId);
 
+    List<Guest> findAllByEvent_EventKey(String eventKey);
+
 
 }

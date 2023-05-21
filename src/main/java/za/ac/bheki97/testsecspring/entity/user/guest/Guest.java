@@ -1,5 +1,6 @@
 package za.ac.bheki97.testsecspring.entity.user.guest;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,11 +22,12 @@ public class Guest implements Serializable {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.EAGER)
     @JoinColumn(name = "event_key")
     private Event event;
-    @CreationTimestamp
+
     @DateTimeFormat(pattern = "YYYY/mm/dd HH:mm:ss")
+    @Column(updatable = false)
     private LocalDateTime joindate;
 
    public Guest(){
@@ -71,7 +73,6 @@ public class Guest implements Serializable {
         return "Guest{" +
                 "guestId=" + guestId +
                 ", account=" + account.toString() +
-                ", event=" + event.toString() +
                 ", joindate=" + joindate +
                 '}';
     }

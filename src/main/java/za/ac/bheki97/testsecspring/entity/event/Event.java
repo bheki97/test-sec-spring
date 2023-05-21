@@ -1,17 +1,15 @@
 package za.ac.bheki97.testsecspring.entity.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import za.ac.bheki97.testsecspring.dto.CreateEventDto;
 import za.ac.bheki97.testsecspring.entity.user.guest.Guest;
 import za.ac.bheki97.testsecspring.entity.user.host.Host;
-import za.ac.bheki97.testsecspring.entity.user.programdir.MasterOfCeremony;
-import za.ac.bheki97.testsecspring.entity.user.speaker.Speaker;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +61,6 @@ public class Event implements Serializable {
         this.eventKey = eventKey;
     }
 
-
     public List<Guest> getGuests() {
         return guests;
     }
@@ -98,15 +95,12 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-       // guests.stream().filter(guest -> guest==null).filter(guest ->);
-
         return "Event{" +
                 "eventKey='" + eventKey + '\'' +
-                ", guests=" + guests.toString() +
+                ", host=" + host +
                 ", occasion='" + occasion + '\'' +
                 ", description='" + description + '\'' +
+                ", date=" + date +
                 '}';
     }
-
-
 }

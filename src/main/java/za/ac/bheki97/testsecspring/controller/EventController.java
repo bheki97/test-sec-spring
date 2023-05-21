@@ -5,13 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import za.ac.bheki97.testsecspring.dto.CreateEventDto;
+import za.ac.bheki97.testsecspring.dto.GuestEventDao;
 import za.ac.bheki97.testsecspring.dto.JoinEventDto;
+import za.ac.bheki97.testsecspring.dto.MakeSpeakerDto;
 import za.ac.bheki97.testsecspring.entity.event.Event;
 import za.ac.bheki97.testsecspring.exception.EventException;
 import za.ac.bheki97.testsecspring.service.EventService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/event")
@@ -56,12 +59,25 @@ public class EventController {
     }
 
     @PostMapping("/host")
-    public CreateEventDto[] getAllHostEvents(@RequestBody String id) throws EventException {
+    public List<Event> getAllHostEvents(@RequestBody String id) throws EventException {
 
         System.out.println("ID: "+id.replace("\"",""));
-        CreateEventDto[] eventDto = service.getAllEventOfHost(id.replace("\"",""));
-        Arrays.stream(eventDto).forEach(System.out::println);
-        return eventDto;
+        //List<Event> events   = service.getAllEventOfHost(id.replace("\"",""));
+
+        return service.getAllEventOfHost(id.replace("\"",""));
+    }
+
+    @PostMapping("/joined")
+    public List<GuestEventDao> eventsJoinedByUser(@RequestBody String accid) throws EventException {
+       return service.getAllJoinedEvents(accid);
+
+    }
+
+    @PostMapping("/change-title")
+    public boolean changeEventTitle(@RequestBody MakeSpeakerDto dto) throws EventException {
+        System.out.println(dto);
+
+        return service.changeEventTitle(dto);
     }
 
 

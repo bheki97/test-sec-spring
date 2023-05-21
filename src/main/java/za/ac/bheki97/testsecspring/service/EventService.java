@@ -14,6 +14,7 @@ import za.ac.bheki97.testsecspring.entity.user.speaker.Speaker;
 import za.ac.bheki97.testsecspring.exception.EventException;
 import za.ac.bheki97.testsecspring.repository.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -111,6 +112,7 @@ public class EventService {
 
         //create new guest object using an account
         Guest guest = new Guest();
+        guest.setJoindate(LocalDateTime.now());
         guest.setAccount(userRepo.findById(dto.getAccId()).orElseThrow());
 
         //update the guests of the event with the newly created guest
@@ -161,7 +163,7 @@ public class EventService {
     }
 
 
-    public boolean makeGuestSpeaker(MakeSpeakerDto dto) throws EventException {
+    public boolean changeEventTitle(MakeSpeakerDto dto) throws EventException {
 
         if(dto ==null ||
                 dto.getGuestId()<0 ||
@@ -169,24 +171,25 @@ public class EventService {
                 dto.getEventKey()==null ||
                 dto.getEventKey().isEmpty())return false;
 
-
+        //System.out.println("guest not null");
 
         if(!eventRepo.existsByHost_HostId(dto.getHostId()))
             throw new EventException("Only Host can Make a Guest Speaker!");
+
 
         if(eventRepo.findById(dto.getEventKey()).orElseThrow()
                 .getGuests().stream()
                 .noneMatch(guest -> guest.getGuestId()==dto.getGuestId()))
             throw new EventException("Only Guest of this event can be Speakers");
 
-        if(eventRepo.findById(dto.getEventKey()).orElseThrow()
+        if((eventRepo.findById(dto.getEventKey()).orElseThrow()
                 .getGuests().stream()
-                .noneMatch(guest -> guest instanceof Speaker))
-            throw new EventException("Guest is Already a Speaker");
+                .anyMatch(guest -> guest.getGuestId()==dto.getGuestId() && guest instanceof Speaker)))
+            throw new EventException("Guest has already a Speaker");
 
 
         Guest guest = guestRepo.findById(dto.getGuestId()).get();
-        Speaker speaker = (Speaker) guest;
+        Speaker speaker = Speaker.buildSpeaker(guest);
         guestRepo.deleteById(guest.getGuestId());
         speakerRepo.save(speaker);
         return true;
@@ -199,7 +202,7 @@ public class EventService {
     }
 
 
-    public CreateEventDto[] getAllEventOfHost(String hostAccId) throws EventException {
+    public List<Event>  getAllEventOfHost(String hostAccId) throws EventException {
 
         if(hostAccId==null )return null;
 
@@ -207,30 +210,40 @@ public class EventService {
             throw new EventException("You are not a Host");
 
         List<Event> events = eventRepo.findAllByHost_Account_IdNumber(hostAccId)
-                .stream().toList();
+                .stream().map(v ->{
 
-        List<CreateEventDto> eventsDto = new ArrayList<>();
+                    //setGuest Event to Null
+                    v.setGuests(v.getGuests().stream().map(g -> {
+                        g.setEvent(null);
+                        return g;
+                    }).toList());
 
-        System.out.println("Service Layer: "+events);
-        CreateEventDto[] eventsArr = new CreateEventDto[events.size()];
-        //System.out.println("Service Layer: Array");
-        return eventsDto.toArray(eventsArr);
+                    return v;
+
+                }).toList();
+
+
+        return events;
     }
 
-    public GuestEventDao[] getAllJoinedEvents(String guestAccId) throws EventException {
+    public List<GuestEventDao> getAllJoinedEvents(String guestAccId) throws EventException {
         if(guestAccId==null )return null;
 
         if(!guestRepo.existsByAccount_IdNumber(guestAccId))
             throw new EventException("You have not yet Joined Any Event");
 
-        List<GuestEventDao> events = guestRepo.findAllByAccount_IdNumber(guestAccId)
+       return guestRepo.findAllByAccount_IdNumber(guestAccId)
                 .stream()
                 .map(guest -> {
                     Event event = guest.getEvent();
                     List<Speaker>speakers = event.getGuests()
                                                 .stream()
                                                 .filter(guest1 -> guest1 instanceof Speaker)
-                                                .map(Speaker::buildSpeaker).toList();
+                                                .map( g ->{
+                                                    g.setEvent(null);
+
+                                                    return (Speaker)g;
+                                                }).toList();
 
                         GuestEventDao dao = new GuestEventDao();
                         dao.setEventKey(event.getEventKey());
@@ -240,14 +253,19 @@ public class EventService {
                         dao.setOccasion(event.getOccasion());
                         dao.setDescription(event.getDescription());
 
-
                     return dao;
                 })
                 .toList();
-        GuestEventDao[] eventsArr = new GuestEventDao[events.size()];
-        events.toArray(eventsArr);
-        return events.toArray(eventsArr);
 
+
+    }
+
+    public List<Guest> getAllEventGuests(String eventKey) throws EventException {
+
+        if(eventKey==null || eventKey.isEmpty())
+            throw new EventException("");
+
+        return guestRepo.findAllByEvent_EventKey(eventKey);
     }
 
 
