@@ -43,7 +43,7 @@ public class EventController {
 
     @PutMapping("")
     public boolean updateEvent(@RequestBody Event event){
-
+        event.setGuests(new ArrayList<>());
         return service.updateEvent(event);
     }
 
@@ -53,9 +53,12 @@ public class EventController {
 
     }
 
-    @DeleteMapping("/leave/{eventKey}/{guestId}")
-    public boolean leaveEvent(@PathVariable String eventKey,@PathVariable int guestId) throws EventException {
-        return service.leaveEvent(eventKey,guestId);
+    @DeleteMapping("/leave/{eventKey}/{accId}")
+    public boolean leaveJoinedEvent(@PathVariable String eventKey,@PathVariable String accId) throws EventException {
+        System.out.println("Guest Leaving the event: " +accId+
+                "\nEvent Key: "+eventKey);
+
+        return service.leaveEvent(eventKey,accId);
     }
 
     @PostMapping("/host")
@@ -69,7 +72,7 @@ public class EventController {
 
     @PostMapping("/joined")
     public List<GuestEventDao> eventsJoinedByUser(@RequestBody String accid) throws EventException {
-       return service.getAllJoinedEvents(accid);
+       return service.getAllJoinedEvents(accid.replace("\"",""));
 
     }
 

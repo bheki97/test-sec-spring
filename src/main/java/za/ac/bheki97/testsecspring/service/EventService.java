@@ -1,5 +1,6 @@
 package za.ac.bheki97.testsecspring.service;
 
+import jakarta.transaction.Transactional;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -85,14 +86,26 @@ public class EventService {
 
     public boolean joinEvent(JoinEventDto dto) throws EventException {
 
+        if(dto==null)
+            throw new EventException("");
+
 
         if(!userRepo.existsById(dto.getAccId())){
-            throw new EventException("Account with"+dto.getAccId()+" does not exist");
+            throw new EventException("Account "+dto.getAccId()+" does not exist");
         }
+
 
         if(!eventRepo.existsById(dto.getEventKey())){
             System.out.println("QR code: "+dto.getEventKey());
             throw new EventException("This is not a Valid QR code");
+        }
+
+
+        //this stops the host from joining the event
+        if(eventRepo.findById(dto.getEventKey())
+                .get().getHost()
+                .getAccount().getIdNumber().equalsIgnoreCase(dto.getAccId())){
+            throw new EventException("You cannot join the event you're hosting");
         }
 
 
@@ -136,28 +149,20 @@ public class EventService {
         return true;
     }
 
-    public boolean leaveEvent(String eventKey,int guestId) throws EventException {
+    @Transactional
+    public boolean leaveEvent(String eventKey,String accId) throws EventException {
 
+        if(eventKey==null || eventKey.isEmpty() || !eventRepo.existsById(eventKey))
+            throw new EventException("Event Key Does not exists for the event you're trying to leave");
 
-        if(!eventRepo.existsById(eventKey))
-            throw new EventException("Invalid event");
+        if(accId==null || accId.isEmpty())
+            throw new EventException("Invalid account");
 
-        if(!guestRepo.existsById(guestId))
-            throw new EventException("You are not a guest");
+        if(!guestRepo.existsByEvent_EventKeyAndAccount_IdNumber(eventKey,accId))
+            throw new EventException("You are not a guest at any event");
 
-        //check if there is any guest is part of the event
-        if(eventRepo.findById(eventKey).orElseThrow()
-                .getGuests().stream()
-                .noneMatch(guest -> guest.getGuestId()==guestId))
-            throw new EventException("You are not part of this event\n");
+        guestRepo.deleteGuestByEvent_EventKeyAndAccount_IdNumber(eventKey,accId);
 
-        System.out.println("You are Part of this event\n");
-        //remove the guest from the event guest list
-        Guest guest = guestRepo.findById(guestId).get();
-        guestRepo.delete(guest);
-
-        if(guestRepo.existsById(guestId))
-            throw new EventException("Guest Failed to Leave");
 
         return true;
     }
@@ -173,7 +178,7 @@ public class EventService {
 
         //System.out.println("guest not null");
 
-        if(!eventRepo.existsByHost_HostId(dto.getHostId()))
+        if(eventRepo.findById(dto.getEventKey()).get().getHost().getHostId()!=dto.getHostId())
             throw new EventException("Only Host can Make a Guest Speaker!");
 
 

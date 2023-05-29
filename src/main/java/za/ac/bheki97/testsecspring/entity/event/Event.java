@@ -24,7 +24,7 @@ public class Event implements Serializable {
     @JoinColumn(name = "host_id")
     private Host host;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event",cascade = CascadeType.REMOVE)
     private List<Guest> guests;
     private String occasion;
     private String description;

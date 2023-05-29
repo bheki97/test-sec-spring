@@ -8,7 +8,13 @@ import java.util.List;
 public interface GuestRepo extends JpaRepository<Guest,Integer> {
 
     boolean existsByAccount_IdNumber(String accId);
-    Guest findByAccount_IdNumber(String accId);
+
+    boolean existsByEvent_EventKeyAndAccount_IdNumber(String eventKey,String accId);
+    Guest findByEvent_EventKeyAndAccount_IdNumber(String eventKey,String accId);
+
+    void deleteGuestByEvent_EventKeyAndAccount_IdNumber(String eventKey,String accId);
+
+
 
     List<Guest> findAllByAccount_IdNumber(String accId);
 
