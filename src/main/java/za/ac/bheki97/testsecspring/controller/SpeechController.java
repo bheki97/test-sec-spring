@@ -31,6 +31,8 @@ public class SpeechController {
     @PostMapping("/transcribe")
     public String transcribeAudio(@RequestParam("audio") MultipartFile audio,
                                   @RequestParam("language") String language) throws IOException, InterruptedException {
+
+
         File inputFile = new File("C:\\User\\VM JELE\\audios\\"+audio.getOriginalFilename()),
                 outputFile = new File("C:\\User\\VM JELE\\audios\\prita-" +new SimpleDateFormat("yyyyMMdd_HHmmss",
                         Locale.ENGLISH).format(new Date())+".flac" );
@@ -49,8 +51,6 @@ public class SpeechController {
 
         }
 
-
-
         audio.transferTo(inputFile);
         ProcessBuilder builder = new ProcessBuilder("ffmpeg","-i",
                 inputFile.getAbsolutePath(),"-ar","44100","-ac","2","-f","flac",outputFile.getAbsolutePath());
@@ -63,8 +63,8 @@ public class SpeechController {
         if (exitCode == 0) {
 
             byte[] data = Files.readAllBytes(Path.of(outputFile.getAbsolutePath()));
-            outputFile.delete();
-            inputFile.delete();
+            //outputFile.delete();
+            //inputFile.delete();
             return speechService.transcribeAudio(data,language.replaceAll("\"",""));
         } else {
 

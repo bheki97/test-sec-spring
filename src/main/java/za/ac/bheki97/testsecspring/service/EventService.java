@@ -1,11 +1,9 @@
 package za.ac.bheki97.testsecspring.service;
 
 import jakarta.transaction.Transactional;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import za.ac.bheki97.testsecspring.dto.CreateEventDto;
 import za.ac.bheki97.testsecspring.dto.GuestEventDao;
 import za.ac.bheki97.testsecspring.dto.JoinEventDto;
 import za.ac.bheki97.testsecspring.dto.MakeSpeakerDto;
@@ -15,9 +13,8 @@ import za.ac.bheki97.testsecspring.entity.user.speaker.Speaker;
 import za.ac.bheki97.testsecspring.exception.EventException;
 import za.ac.bheki97.testsecspring.repository.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -41,7 +38,8 @@ public class EventService {
     @Autowired
     private UserRepository userRepo;
 
-
+    @Autowired
+    private SpeechTextService speechService;
 
 
     public boolean createEvent(Event event) throws EventException {
@@ -187,10 +185,13 @@ public class EventService {
                 .noneMatch(guest -> guest.getGuestId()==dto.getGuestId()))
             throw new EventException("Only Guest of this event can be Speakers");
 
-        if((eventRepo.findById(dto.getEventKey()).orElseThrow()
-                .getGuests().stream()
-                .anyMatch(guest -> guest.getGuestId()==dto.getGuestId() && guest instanceof Speaker)))
-            throw new EventException("Guest has already a Speaker");
+//        if((eventRepo.findById(dto.getEventKey()).orElseThrow()
+//                .getGuests().stream()
+//                .anyMatch(guest -> guest.getGuestId()==dto.getGuestId() && guest instanceof Speaker)))
+//            throw new EventException("Guest is already a Speaker");
+
+        if(speakerRepo.existsById(dto.getGuestId()))
+            throw new EventException("Guest is Already a Speaker");
 
 
         Guest guest = guestRepo.findById(dto.getGuestId()).get();
@@ -273,10 +274,71 @@ public class EventService {
         return guestRepo.findAllByEvent_EventKey(eventKey);
     }
 
+    //needs hostId eventId
+    public List<Speaker> getAllEventSpeakers(String eventKey) throws EventException {
 
+        if(eventKey==null || eventKey.isEmpty())
+            throw new EventException("Invalid Event Key");
 
+        return speakerRepo.findAllByEvent_EventKey(eventKey)
+                .stream().map(s ->{
+                    s.setEvent(null);
 
+                    return s;
+                }).toList();
+    }
 
+    public List<Speaker> getAllEventSpeaker(String eventKey,String language) throws EventException{
 
+        if(eventKey==null || eventKey.isEmpty())
+            throw new EventException("Invalid Event Key");
+
+        return speakerRepo.findAllByEvent_EventKey(eventKey)
+                .stream().map(s ->{
+                    s.setEvent(null);
+
+                    try {
+                        if(s.getSpeech()!=null && !s.getSpeech().isEmpty() ){
+                            s.setSpeech(
+                                    speechService.translateText(s.getSpeech(),
+                                            s.getAccount().getLanguage(),language));
+                        }
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return s;
+                }).toList();
+    }
+
+    @Transactional
+    public boolean addSpeakerSpeech(int guestId,String speech) throws EventException {
+
+        if(guestId<0)
+            throw new EventException("Invalid Guest id");
+
+        if(speech==null||speech.isEmpty())
+            throw new EventException("Invalid speech");
+
+        if(!speakerRepo.existsById(guestId))
+            throw new EventException("You're Not a Speaker");
+
+        speakerRepo.updateSpeechById(guestId,speech);
+
+        return true;
+    }
+
+    @Transactional
+    public String addSPeech( byte[] audio, String language, int guestId) throws IOException {
+        String convertedAudio = speechService.transcribeAudio(audio,language);
+        StringBuilder speech = new StringBuilder(speakerRepo.getSpeechByGuestId(guestId));
+        speech.append("\n");
+        speech.append(convertedAudio);
+
+        speakerRepo.updateSpeechById(guestId,speech.toString());
+
+        return speech.toString();
+    }
 
 }

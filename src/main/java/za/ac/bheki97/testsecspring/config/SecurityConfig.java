@@ -50,7 +50,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests().requestMatchers("/account","/account/{id}","/authenticate","/speech/**","/event/**","/event/{id}"
-                        ,"/event/leave/{eventKey}/{guestId}","/event/host/{id}").permitAll()
+                        ,"/event/leave/{eventKey}/{guestId}","/event/host/{id}","/event/{eventKey}/speaker","/event/{guestId}"
+                        ,"/event/{guestId}/{language}","/event/{eventKey}/speaker/{language}").permitAll()
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/account/**").authenticated()

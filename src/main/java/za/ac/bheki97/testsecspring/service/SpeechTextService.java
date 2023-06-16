@@ -27,7 +27,7 @@ public class SpeechTextService {
                                         GoogleCredentials.fromStream(
                                                 getClass()
                                                         .getClassLoader()
-                                                        .getResourceAsStream("google_credentials.json")
+                                                        .getResourceAsStream("google_credential.json")
                                         )
                                 )
                         )
@@ -63,7 +63,7 @@ public class SpeechTextService {
     public String translateText(String text,String originLang,String transLang) throws IOException {
         Translate translate = TranslateOptions.newBuilder()
                 .setCredentials(GoogleCredentials.fromStream(getClass().getClassLoader()
-                        .getResourceAsStream("google_credentials.json")))
+                        .getResourceAsStream("google_credential.json")))
                 .build().getService();
 
         if(originLang.equalsIgnoreCase(transLang)){
@@ -92,7 +92,7 @@ public class SpeechTextService {
                                         GoogleCredentials.fromStream(
                                                 getClass()
                                                     .getClassLoader()
-                                                    .getResourceAsStream("google_credentials.json")
+                                                    .getResourceAsStream("google_credential.json")
                                         )
                                 )
                         )
