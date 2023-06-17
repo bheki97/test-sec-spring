@@ -332,7 +332,8 @@ public class EventService {
     @Transactional
     public String addSPeech( byte[] audio, String language, int guestId) throws IOException {
         String convertedAudio = speechService.transcribeAudio(audio,language);
-        StringBuilder speech = new StringBuilder(speakerRepo.getSpeechByGuestId(guestId));
+        String currSpeech = speakerRepo.getSpeechByGuestId(guestId);
+        StringBuilder speech = new StringBuilder(currSpeech==null? "":currSpeech);
         speech.append("\n");
         speech.append(convertedAudio);
 
