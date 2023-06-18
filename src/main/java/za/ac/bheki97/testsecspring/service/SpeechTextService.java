@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SpeechTextService {
@@ -123,6 +124,13 @@ public class SpeechTextService {
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             outputStream.write(response.getAudioContent().toByteArray());
+
+        textToSpeechClient.shutdown();
+        try {
+            textToSpeechClient.awaitTermination(5, TimeUnit.SECONDS); // Adjust the timeout as needed
+        } catch (InterruptedException e) {
+            // Handle the interruption if needed
+        }
 
             return new MockMultipartFile("file", "audio.flac", "audio/flac", outputStream.toByteArray());
 
